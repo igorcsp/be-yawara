@@ -1,0 +1,8 @@
+{
+  "db": {
+    "uri": ""
+  },
+  "jwt": {
+    "secret": "super_secure_production_key"
+  }
+}
