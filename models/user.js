@@ -1,7 +1,7 @@
+const config = require('config')
 const mongoose = require('mongoose');
 const Joi = require('joi');
 const jwt = require('jsonwebtoken');
-const config = require('config');
 
 const userSchema = new mongoose.Schema({
     name: {
@@ -42,7 +42,7 @@ const userSchema = new mongoose.Schema({
     orders: [
         {
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'Order' // Referência ao modelo de pedidos
+            ref: 'Order'
         }
     ]
 }, { timestamps: true });

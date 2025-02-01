@@ -2,13 +2,10 @@
   "name": "be-yawara",
   "version": "1.0.0",
   "main": "index.js",
-  "directories": {
-    "test": "tests"
-  },
   "scripts": {
     "start": "cross-env NODE_ENV=production node index.js",
     "dev": "cross-env NODE_ENV=development nodemon index.js",
-    "test": "cross-env NODE_ENV=test jest --watchAll --verbose"
+    "test": "cross-env NODE_ENV=test jest --watchAll --verbose --detectOpenHandles"
   },
   "author": "",
   "license": "ISC",
@@ -16,7 +13,6 @@
   "dependencies": {
     "bcrypt": "^5.1.1",
     "config": "^3.3.12",
-    "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "express-async-errors": "^3.1.1",
     "joi": "^17.13.3",

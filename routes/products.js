@@ -1,8 +1,8 @@
 const express = require('express');
 const { Category } = require('../models/category');
-const { Product, validateProduct } = require('../models/product'); 
+const { Product, validateProduct } = require('../models/product');
 const auth = require('../middleware/auth');
-const validateError = require('../middleware/validateError');
+const admin = require('../middleware/admin');
 const router = express.Router();
 
 router.get('/', async (req, res) => {
@@ -10,7 +10,10 @@ router.get('/', async (req, res) => {
     res.send(products);
 });
 
-router.post('/', async (req, res) => {
+router.post('/', [auth, admin], async (req, res) => {
+    const { error } = validateProduct(req.body);
+    if (error) return res.status(400).send(error.details[0].message);
+
     const category = await Category.findById(req.body.categoryId);
     if (!category) return res.status(400).send('Invalid category.');
 
@@ -30,7 +33,10 @@ router.post('/', async (req, res) => {
     res.send(product);
 });
 
-router.put('/:id', async (req, res) => {
+router.put('/:id', [auth, admin], async (req, res) => {
+    const { error } = validateProduct(req.body);
+    if (error) return res.status(400).send(error.details[0].message);
+
     const category = await Category.findById(req.body.categoryId);
     if (!category) return res.status(400).send('Invalid category.');
 
@@ -54,7 +60,7 @@ router.put('/:id', async (req, res) => {
     res.send(product);
 });
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', [auth, admin], async (req, res) => {
     const product = await Product.findByIdAndRemove(req.params.id);
 
     if (!product) return res.status(404).send('The product with the given ID was not found.');

@@ -9,7 +9,6 @@ require('./startup/db')()
 require('./startup/config')()
 require('./startup/validation')()
 
-
 const port = config.get('app.port')
 const server = app.listen(port, () => { winston.info(`Listening on port ${port}`) })
 winston.info(`Ambiente atual: ${process.env.NODE_ENV}`)

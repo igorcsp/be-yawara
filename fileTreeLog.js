@@ -19,7 +19,7 @@ function formatTree(tree, prefix = "") {
 
 const directoryPath = "./";
 
-const tree = dirTree(directoryPath, { exclude: [/node_modules/, /logs/, /coverage/] });
+const tree = dirTree(directoryPath, { exclude: [/node_modules/, /logs/, /coverage/, /.env/, /.git/] });
 
 if (tree) {
     console.log(tree.name);

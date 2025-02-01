@@ -1,6 +1,8 @@
 const express = require('express')
 const { Category, validateCategory } = require('../models/category')
 const validateObjectId = require('../middleware/validateObjectId')
+const auth = require('../middleware/auth')
+const admin = require('../middleware/admin')
 const router = express.Router()
 
 router.get('/', async (req, res) => {
@@ -8,33 +10,40 @@ router.get('/', async (req, res) => {
     res.send(categories)
 })
 
-router.post('/', async (req, res) => {
+router.post('/', [auth, admin], async (req, res) => {
+    const { error } = validateCategory(req.body)
+    if (error) return res.status(400).send(error.details[0].message)
+
     let category = new Category({ name: req.body.name })
     await category.save()
     res.send(category)
 })
 
-router.put('/:id', async (req, res) => {
+router.put('/:id', [auth, admin], async (req, res) => {
+    const { error } = validateCategory(req.body)
+    if (error) return res.status(400).send(error.details[0].message)
+
     const category = await Category.findByIdAndUpdate(
         req.params.id,
         { name: req.body.name },
         { new: true }
     );
 
-    if (!category) return res.status(404).send(`Category id ${parseInt(req.params.id)} was not found`);
+    if (!category) return res.status(404).send(`Category id ${req.params.id} was not found`);
 
     res.send(category);
 });
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', [auth, admin], async (req, res) => {
     const category = await Category.findByIdAndDelete(req.params.id)
 
-    if (!category) return res.status(404).send(`Category id ${parseInt(req.params.id)} was not found`)
+    if (!category) return res.status(404).send(`Category id ${req.params.id} was not found`)
 
     res.send(category)
 })
 
 router.get('/:id', validateObjectId, async (req, res) => {
+
     const category = await Category.findById(req.params.id)
 
     if (!category) return res.status(404).send(`Category id ${parseInt(req.params.id)} was not found`)
@@ -43,3 +52,5 @@ router.get('/:id', validateObjectId, async (req, res) => {
 })
 
 module.exports = router
+
+// falta desbugar esse e dps os /products
