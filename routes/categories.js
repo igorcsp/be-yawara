@@ -19,7 +19,7 @@ router.post('/', [auth, admin], async (req, res) => {
     res.send(category)
 })
 
-router.put('/:id', [auth, admin], async (req, res) => {
+router.put('/:id', [auth, admin, validateObjectId], async (req, res) => {
     const { error } = validateCategory(req.body)
     if (error) return res.status(400).send(error.details[0].message)
 
@@ -34,7 +34,7 @@ router.put('/:id', [auth, admin], async (req, res) => {
     res.send(category);
 });
 
-router.delete('/:id', [auth, admin], async (req, res) => {
+router.delete('/:id', [auth, admin, validateObjectId], async (req, res) => {
     const category = await Category.findByIdAndDelete(req.params.id)
 
     if (!category) return res.status(404).send(`Category id ${req.params.id} was not found`)
@@ -46,11 +46,10 @@ router.get('/:id', validateObjectId, async (req, res) => {
 
     const category = await Category.findById(req.params.id)
 
-    if (!category) return res.status(404).send(`Category id ${parseInt(req.params.id)} was not found`)
+    if (!category) return res.status(404).send(`Category id ${req.params.id} was not found`)
 
     res.send(category)
 })
 
 module.exports = router
 
-// falta desbugar esse e dps os /products

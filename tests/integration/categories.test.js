@@ -1,12 +1,15 @@
 const request = require('supertest')
 const { Category } = require('../../models/category')
 const mongoose = require('mongoose')
-const bcrypt = require('bcrypt')
+const { createMockUser, removeMockUsers } = require('../mocks/users');
+
 
 describe('/api/categories', () => {
     let server;
     let category;
     let categoryId;
+    let adminToken;
+    let userToken;
 
     beforeAll(async () => {
         server = require('../../index')
@@ -15,11 +18,19 @@ describe('/api/categories', () => {
     beforeEach(async () => {
         category = new Category({ name: 'Test Category' })
         await category.save()
+
         categoryId = category._id
+
+        const { token: adminAuthToken } = await createMockUser('admin');
+        const { token: userAuthToken } = await createMockUser('regular');
+
+        adminToken = adminAuthToken;
+        userToken = userAuthToken;
     })
 
     afterEach(async () => {
         await Category.deleteMany({})
+        await removeMockUsers()
     })
 
     afterAll(async () => {
@@ -70,11 +81,17 @@ describe('/api/categories', () => {
             name = 'New Category'
         })
 
-        const exec = () => {
+        const exec = (tokenToUse = adminToken) => {
             return request(server)
                 .post('/api/categories')
+                .set('yawara-token', tokenToUse)
                 .send({ name })
         }
+
+        it('should return 403 if user is not admin', async () => {
+            const res = await exec(userToken)
+            expect(res.status).toBe(403)
+        })
 
         it('should return 400 if name is less than required characters', async () => {
             name = 'a'
@@ -101,15 +118,21 @@ describe('/api/categories', () => {
         let newName;
         let id;
 
-        const exec = () => {
+        const exec = (tokenToUse = adminToken) => {
             return request(server)
                 .put(`/api/categories/${id}`)
+                .set('yawara-token', tokenToUse)
                 .send({ name: newName })
         }
 
         beforeEach(() => {
             id = categoryId
             newName = 'Updated Category'
+        })
+
+        it('should return 403 if user is not admin', async () => {
+            const res = await exec(userToken)
+            expect(res.status).toBe(403)
         })
 
         it('should return 404 if category id is invalid', async () => {
@@ -148,14 +171,20 @@ describe('/api/categories', () => {
     describe('DELETE /:id', () => {
         let id;
 
-        const exec = () => {
+        const exec = (tokenToUse = adminToken) => {
             return request(server)
                 .delete(`/api/categories/${id}`)
-                .send({})
+                .set('yawara-token', tokenToUse)
+                .send()
         }
 
         beforeEach(() => {
             id = categoryId
+        })
+
+        it('should return 403 if user is not admin', async () => {
+            const res = await exec(userToken)
+            expect(res.status).toBe(403)
         })
 
         it('should return 404 if category id is invalid', async () => {

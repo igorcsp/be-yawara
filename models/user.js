@@ -7,7 +7,7 @@ const userSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true,
-        minLength: 5,
+        minLength: 2,
         maxLength: 60
     },
     email: {
@@ -49,7 +49,12 @@ const userSchema = new mongoose.Schema({
 
 userSchema.methods.generateAuthToken = function () {
     const token = jwt.sign(
-        { _id: this._id, isAdmin: this.isAdmin },
+        {
+            _id: this._id,
+            name: this.name,
+            email: this.email,
+            isAdmin: this.isAdmin
+        },
         config.get('jwt.secret'),
         { expiresIn: '1d' }
     );
@@ -60,7 +65,7 @@ const User = mongoose.model('User', userSchema);
 
 function validateUser(user) {
     const schema = Joi.object({
-        name: Joi.string().min(5).max(60).required(),
+        name: Joi.string().min(2).max(60).required(),
         email: Joi.string().min(5).max(255).required().email(),
         password: Joi.string().min(8).max(255).required(),
         phone: Joi.string().min(10).max(20).required(),

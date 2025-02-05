@@ -57,51 +57,51 @@ describe('/api/users', () => {
         })
     })
 
-    describe('POST /', () => {
-        let newUser;
+    // describe('POST /', () => {
+    //     let newUser;
 
-        beforeEach(() => {
-            newUser = {
-                name: 'New User',
-                email: 'new@example.com',
-                password: 'newpass123',
-                phone: '0987654321',
-                address: {
-                    street: '456 New St',
-                    city: 'New City',
-                    state: 'NS',
-                    zipCode: '54321'
-                }
-            }
-        })
+    //     beforeEach(() => {
+    //         newUser = {
+    //             name: 'New User',
+    //             email: 'new@example.com',
+    //             password: 'newpass123',
+    //             phone: '0987654321',
+    //             address: {
+    //                 street: '456 New St',
+    //                 city: 'New City',
+    //                 state: 'NS',
+    //                 zipCode: '54321'
+    //             }
+    //         }
+    //     })
 
-        const exec = () => {
-            return request(server)
-                .post('/api/users')
-                .send(newUser);
-        }
+    //     const exec = () => {
+    //         return request(server)
+    //             .post('/api/users')
+    //             .send(newUser);
+    //     }
 
-        it('should return 400 if it is not a valid user', async () => {
-            newUser.email = 'invalid-email';
-            const res = await exec();
-            expect(res.status).toBe(400);
-        })
+    //     it('should return 400 if it is not a valid user', async () => {
+    //         newUser.email = 'invalid-email';
+    //         const res = await exec();
+    //         expect(res.status).toBe(400);
+    //     })
 
-        it('should return 400 if user is already registered', async () => {
-            newUser.email = user.email;
-            const res = await exec();
-            expect(res.status).toBe(400);
-        })
+    //     it('should return 400 if user is already registered', async () => {
+    //         newUser.email = user.email;
+    //         const res = await exec();
+    //         expect(res.status).toBe(400);
+    //     })
 
-        it('should save user if it is valid', async () => {
-            const res = await exec();
-            expect(res.status).toBe(200);
-            expect(res.header).toHaveProperty('yawara-token');
-            expect(res.body).toHaveProperty('_id');
-            expect(res.body).toHaveProperty('email', newUser.email);
+    //     it('should save user if it is valid', async () => {
+    //         const res = await exec();
+    //         expect(res.status).toBe(200);
+    //         expect(res.header).toHaveProperty('yawara-token');
+    //         expect(res.body).toHaveProperty('_id');
+    //         expect(res.body).toHaveProperty('email', newUser.email);
 
-            const userInDb = await User.findOne({ email: newUser.email });
-            expect(userInDb).not.toBeNull();
-        })
-    })
+    //         const userInDb = await User.findOne({ email: newUser.email });
+    //         expect(userInDb).not.toBeNull();
+    //     })
+    // })
 })

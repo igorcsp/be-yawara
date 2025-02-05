@@ -25,9 +25,15 @@ const productSchema = new mongoose.Schema({
         min: 0
     },
     category: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Category', 
-        required: true
+        _id: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Category',
+            required: true
+        },
+        name: {
+            type: String,
+            required: true
+        }
     },
     images: {
         type: [String],
@@ -47,7 +53,7 @@ function validateProduct(product) {
         price: Joi.number().min(0).required(),
         stock: Joi.number().min(0).required(),
         categoryId: Joi.string().hex().length(24).required(),
-        images: Joi.array().items(Joi.string().uri()).min(1).required()
+        images: Joi.array().items(Joi.string()).min(1).required()
     });
 
     return schema.validate(product);
