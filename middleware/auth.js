@@ -2,7 +2,10 @@ const jwt = require('jsonwebtoken')
 const config = require('config')
 
 module.exports = function (req, res, next) {
-    const token = req.header('yawara-token')
+    const authHeader = req.header("Authorization");
+    if (!authHeader) return res.status(401).send("Access denied. No token provided.");
+
+    const token = authHeader.split(" ")[1];
     if (!token) return res.status(401).send('Acess denied. No token provided.')
 
     try {

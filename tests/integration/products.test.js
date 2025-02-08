@@ -96,7 +96,7 @@ describe('/api/products', () => {
         const exec = (authToken = token) => {
             return request(server)
                 .post('/api/products')
-                .set('yawara-token', authToken)
+                .set("Authorization", `Bearer ${authToken}`)
                 .send(newProduct);
         };
 
@@ -147,7 +147,7 @@ describe('/api/products', () => {
         const exec = (authToken = token) => {
             return request(server)
                 .put(`/api/products/${id}`)
-                .set('yawara-token', authToken)
+                .set("Authorization", `Bearer ${authToken}`)
                 .send(updatedProduct);
         };
 
@@ -198,7 +198,7 @@ describe('/api/products', () => {
         const exec = (authToken = token) => {
             return request(server)
                 .delete(`/api/products/${id}`)
-                .set('yawara-token', authToken);
+                .set("Authorization", `Bearer ${authToken}`);
         };
 
         beforeEach(() => {

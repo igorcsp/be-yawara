@@ -139,7 +139,8 @@ describe('/api/auth', () => {
         it('should save user if it is valid', async () => {
             const res = await execRegister();
             expect(res.status).toBe(200);
-            expect(res.header).toHaveProperty('yawara-token');
+            expect(res.header).toHaveProperty('authorization');
+            expect(res.header.authorization).toMatch(/^Bearer\s.+/);
             expect(res.body).toHaveProperty('_id');
             expect(res.body).toHaveProperty('email', newUser.email);
 

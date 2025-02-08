@@ -41,7 +41,7 @@ router.post('/register', async (req, res) => {
     await user.save()
 
     const token = user.generateAuthToken()
-    res.header('yawara-token', token).send(_.pick(user, ['_id', 'name', 'email', 'phone', 'address']))
+    res.header("Authorization", `Bearer ${token}`).send(_.pick(user, ['_id', 'name', 'email', 'phone', 'address']))
 })
 
 function validate(req) {

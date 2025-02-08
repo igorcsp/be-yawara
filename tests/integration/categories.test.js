@@ -84,7 +84,7 @@ describe('/api/categories', () => {
         const exec = (tokenToUse = adminToken) => {
             return request(server)
                 .post('/api/categories')
-                .set('yawara-token', tokenToUse)
+                .set("Authorization", `Bearer ${tokenToUse}`)
                 .send({ name })
         }
 
@@ -121,7 +121,7 @@ describe('/api/categories', () => {
         const exec = (tokenToUse = adminToken) => {
             return request(server)
                 .put(`/api/categories/${id}`)
-                .set('yawara-token', tokenToUse)
+                .set("Authorization", `Bearer ${tokenToUse}`)
                 .send({ name: newName })
         }
 
@@ -174,7 +174,7 @@ describe('/api/categories', () => {
         const exec = (tokenToUse = adminToken) => {
             return request(server)
                 .delete(`/api/categories/${id}`)
-                .set('yawara-token', tokenToUse)
+                .set("Authorization", `Bearer ${tokenToUse}`)
                 .send()
         }
 
