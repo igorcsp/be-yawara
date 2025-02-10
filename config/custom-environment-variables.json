@@ -1,0 +1,6 @@
+{
+  "jwt": {
+    "secret": "JWT_PRIVATE_KEY",
+    "expiresIn": "1d"
+  }
+}

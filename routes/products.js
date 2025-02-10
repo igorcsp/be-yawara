@@ -14,7 +14,7 @@ router.get('/', async (req, res) => {
 });
 
 router.post("/", [auth, admin], upload.array("images"), async (req, res) => {
-    console.log(req.body); 
+    console.log(req.body); // form data que o endpoint está recebendo
 
     const { error } = validateProduct(req.body);
     if (error) return res.status(400).send(error.details);

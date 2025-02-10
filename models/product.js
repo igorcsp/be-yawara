@@ -37,10 +37,7 @@ const productSchema = new mongoose.Schema({
     },
     images: {
         type: [String],
-        validate: {
-            validator: (arr) => arr.length > 0,
-            message: 'At least one image is required.'
-        }
+        required: false
     },
 }, { timestamps: true });
 
@@ -53,7 +50,7 @@ function validateProduct(product) {
         price: Joi.number().min(0).required(),
         stock: Joi.number().min(0).required(),
         categoryId: Joi.string().hex().length(24).required(),
-        images: Joi.array().items(Joi.string()).min(1).required()
+        images: Joi.array().items(Joi.string()).min(1).optional()
     });
 
     return schema.validate(product);
